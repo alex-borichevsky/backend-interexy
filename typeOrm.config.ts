@@ -10,7 +10,7 @@ config();
 
 const configService = new ConfigService();
 
-new DataSource({
+export default new DataSource({
   type: 'postgres',
   host: 'localhost',
   port: 5432,
