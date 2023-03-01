@@ -3,38 +3,47 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { RolesModule } from './roles/roles.module';
-import { Role } from "./roles/roles.model";
-import { User } from "./users/users.model";
-import { Post } from "./posts/posts.model";
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import * as path from "path";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
+import { User } from "./users/users.model";
+import { Role } from "./roles/roles.model";
+import { Post } from "./posts/posts.model";
+
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static')
     }),
-
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "postgres",
-      password: "postgres",
-      database: "interexy_db",
-      synchronize: true,
-      logging: false,
-      entities: [User, Post, Role],
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: 'localhost',
+        port: 5432,
+        username: 'postgres',
+        password: 'postgres',
+        database: 'db_migration',
+        entities: [User, Post, Role],
+        autoLoadEntities: true,
+      }),
     }),
+
     UsersModule,
     PostsModule,
     RolesModule,
     AuthModule,
-    FilesModule
+    FilesModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+class AppModule {}
+export default AppModule;
+

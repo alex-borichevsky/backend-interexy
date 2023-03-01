@@ -1,22 +1,24 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import  AppModule  from './app.module';
 import { ValidationPipe } from "./pipe/validation.pipe";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
 
   const config = new DocumentBuilder()
-    .setTitle('Nest interexy')
-    .setDescription('Rest-api docs')
-    .setVersion('1.0.0')
+    .setTitle('Interexy backend')
+    .setDescription('Nest.js project')
+    .setVersion('1.0')
     .addTag('Alex Borichevsky')
-    .build()
+    .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document)
+  SwaggerModule.setup('api', app, document);
 
+
+  await app.listen(3000);
 
   app.useGlobalPipes(new ValidationPipe());
 }
 bootstrap();
+

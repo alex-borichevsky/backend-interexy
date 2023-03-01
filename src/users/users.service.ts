@@ -4,11 +4,16 @@ import { User } from "./users.model";
 import { Repository } from "typeorm";
 import { AddRoleParams, BanUserParams, CreateUserParams, UpdateUserParams } from "../utils/types";
 import { RolesService } from "../roles/roles.service";
+// import { EventEmitter2 } from "@nestjs/event-emitter";
+// import { CreateUserEvent } from "./events/create-user.event";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>,
-              private roleService: RolesService) {
+              private roleService: RolesService,
+              // private eventEmitter: EventEmitter2
+
+  ) {
   }
   public async getUserByEmail(email: string) {
     return this.userRepository.findOne( {where: [{email}], relations: ['posts', 'roles']});
@@ -18,10 +23,19 @@ export class UsersService {
   }
 
   public async createUser(createUserDetails: CreateUserParams) {
+
+
+    // const userCreateEvent = new CreateUserEvent();
+    // userCreateEvent.name = createUserDetails.email;
+    // userCreateEvent.description = `user with email: ${createUserDetails.email} created`;
+    // console.log(userCreateEvent);
+    // this.eventEmitter.emit('user.created', userCreateEvent);
+
+
     const newUser = this.userRepository.create({
       ...createUserDetails, createdAt: new Date()
     });
-    const role = await this.roleService.getRole("USER");
+    const role = await this.roleService.getRole("ADMIN");
     newUser.roles = [role];
     return this.userRepository.save(newUser);
   }
