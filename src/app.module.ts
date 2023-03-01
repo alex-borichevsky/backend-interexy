@@ -12,7 +12,6 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
 import { User } from "./users/users.model";
 import { Role } from "./roles/roles.model";
 import { Post } from "./posts/posts.model";
-import { OrdersModule } from "./orders/orders.module";
 
 
 @Module({
@@ -33,7 +32,7 @@ import { OrdersModule } from "./orders/orders.module";
         database: 'db_migration',
         entities: [User, Post, Role],
         autoLoadEntities: true,
-        synchronize: true
+        // synchronize: true
       }),
     }),
 
@@ -42,7 +41,6 @@ import { OrdersModule } from "./orders/orders.module";
     RolesModule,
     AuthModule,
     FilesModule,
-    OrdersModule
   ],
   controllers: [],
   providers: [],
