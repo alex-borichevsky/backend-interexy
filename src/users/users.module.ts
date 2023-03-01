@@ -7,13 +7,13 @@ import { User } from "./users.model";
 import { Post } from "../posts/posts.model";
 import { Role } from "../roles/roles.model";
 import { AuthModule } from "../auth/auth.module";
+import { UserCreatedListener } from "./listeners/user-created.listener";
 // import { CreateUserListener } from "./listeners/create-user.listener";
 
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService,
-    // CreateUserListener
+  providers: [UsersService, UserCreatedListener
 
   ],
   imports: [

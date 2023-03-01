@@ -25,17 +25,20 @@ export class UsersService {
   public async createUser(createUserDetails: CreateUserParams) {
 
 
-    const userCreatedEvent= new UserCreatedEvent();
-    userCreatedEvent.email = createUserDetails.email;
-    userCreatedEvent.description = `User with email: ${createUserDetails.email} created`;
-    this.eventEmitter.emit('user.created', userCreatedEvent);
-
 
     const newUser = this.userRepository.create({
       ...createUserDetails, createdAt: new Date()
     });
     const role = await this.roleService.getRole("ADMIN");
     newUser.roles = [role];
+
+    const userCreatedEvent= new UserCreatedEvent();
+    userCreatedEvent.email = newUser.email;
+    userCreatedEvent.description = `User with email: ${newUser.email} created`;
+    this.eventEmitter.emit('user.created', userCreatedEvent);
+
+
+
     return this.userRepository.save(newUser);
   }
 
