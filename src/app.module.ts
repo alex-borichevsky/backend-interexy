@@ -16,6 +16,9 @@ import { Post } from "./posts/posts.model";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: `.${process.env.NODE_ENV}.env`
+    }),
     EventEmitterModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static')
@@ -25,14 +28,13 @@ import { Post } from "./posts/posts.model";
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: 'db_migration',
+        host: process.env.POSTGRES_HOST,
+        port: Number(process.env.POSTGRES_PORT),
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB,
         entities: [User, Post, Role],
         autoLoadEntities: true,
-        // synchronize: true
       }),
     }),
 
